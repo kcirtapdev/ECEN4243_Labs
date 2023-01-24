@@ -10,8 +10,6 @@
  *              5. Writing register zero has no effect.
  */
 
-// Showing ryan how tod ot his
-
 module regfile(
     input logic clk,
     input logic we3, // write enable
