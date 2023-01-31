@@ -14,7 +14,7 @@ module regfile_tb;
     wire [31:0] rd1;
     wire [31:0] rd2;
 
-    divider mut(
+    regfile mut(
         // Inputs
         .clk(clk),
         .we3(we3),
@@ -31,7 +31,5 @@ module regfile_tb;
     initial begin
         clk = 0;
         we3 = 0;
-
     end
-
 endmodule
