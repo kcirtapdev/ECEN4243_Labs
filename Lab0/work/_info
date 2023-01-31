@@ -1,0 +1,82 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z1 dC:/Users/Pat/OneDrive/School/2023 Spring/Computer Architecture/Labs/Lab0/ECEN4243_Labs/Lab0
+T_opt
+!s110 1675132936
+V4glfKRgMAMNimZ?j:7D`B3
+04 7 4 work regfile fast 0
+=1-00d86155bcaf-63d88008-f5-63e8
+Z2 !s124 OEM100
+Z3 o-quiet -auto_acc_if_foreign -work work +acc
+Z4 tCvgOpt 0
+n@_opt
+Z5 OL;O;2021.1;73
+R1
+T_opt1
+!s110 1675133034
+V[N0b6nOYDlz]?ID7CYmB83
+04 10 4 work regfile_tb fast 0
+=1-00d86155bcaf-63d88069-26e-6320
+R2
+R3
+R4
+n@_opt1
+R5
+vregfile
+Z6 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z7 !s110 1675133032
+!i10b 1
+!s100 ;W@K<JVK8]2;a`0W9D:dT3
+IV[_N938MUCnBFJ<6[AjNd3
+S1
+R1
+w1675132323
+8regfile.sv
+Fregfile.sv
+!i122 0
+L0 21 21
+Z8 VDg1SIo80bB@j0V0VzS_@n1
+Z9 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z10 !s108 1675133031.000000
+Z11 !s107 regfile_tb.sv|regfile.sv|
+Z12 !s90 -reportprogress|300|regfile.sv|regfile_tb.sv|
+!i113 0
+Z13 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
+vregfile_tb
+R6
+R7
+!i10b 1
+!s100 [ZB>]@O1F9bn@>KC>1WkP1
+II;MzEO]omnIacKe1Jl[R60
+S1
+R1
+w1675132324
+8regfile_tb.sv
+Fregfile_tb.sv
+!i122 0
+L0 3 54
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R4

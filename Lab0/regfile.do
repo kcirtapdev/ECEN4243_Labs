@@ -30,29 +30,29 @@ vlib work
 vlog regfile.sv regfile_tb.sv
 
 # start and run simulation
-vsim -voptargs=+acc work.stimulus 
+vsim -voptargs=+acc work.regfile_tb
 
 view list
 view wave
 
 -- display input and output signals as hexidecimal values
 # Diplays All Signals recursively
-add wave -hex -r /stimulus/*
+add wave -hex -r /regfile_tb/*
 
 # Adapt to make Waveform Viewer prettier :)
 #add wave -noupdate -divider -height 32 "MIPS Datapath"
-#add wave -hex /stimulus/mut/mips/dp/*
+#add wave -hex /regfile_tb/mut/mips/dp/*
 #add wave -noupdate -divider -height 32 "MIPS Control"
-#add wave -hex /stimulus/mut/mips/c/*
+#add wave -hex /regfile_tb/mut/mips/c/*
 #add wave -noupdate -divider -height 32 "Instruction Memory"
-#add wave -hex /stimulus/mut/imem/*
+#add wave -hex /regfile_tb/mut/imem/*
 #add wave -noupdate -divider -height 32 "Data Memory (Storage)"
-#add wave -hex /stimulus/mut/dmem/*
-#add wave -noupdate -divider -height 32 "Register File"
-#add wave -hex /stimulus/mut/mips/dp/rf/*
-#add wave -hex /stimulus/mut/mips/dp/rf/rf
-#add list -hex -r /stimulus/*
-#add log -hex -r /*
+#add wave -hex /regfile_tb/mut/dmem/*
+add wave -noupdate -divider -height 32 "Register File"
+add wave -hex /regfile_tb/mut/mips/dp/rf/*
+add wave -hex /regfile_tb/mut/mips/dp/rf/rf
+add list -hex -r /regfile_tb/*
+add log -hex -r /*
 
 -- Set Wave Output Items 
 TreeUpdate [SetDefaultTree]
