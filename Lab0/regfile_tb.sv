@@ -43,14 +43,33 @@ module regfile_tb;
         forever #50 clk = ~clk;
     end
     
-    always @(posedge clk) begin
-        // Randomize addresses
-        ra1 = $urandom%32;
-        ra2 = $urandom%32;
-        wa3 = $urandom%32;
-
-        // Randomize write data
-        wd3 = $urandom;
+    integer i;
+    integer prev_data = 0;
+    integer fail_count = 0;
+    initial begin
+        for(i = 1; i < 32; i++) begin
+            @(posedge clk);
+            ra1 = i;
+            ra2 = i;
+            wa3 = i;
+            wd3 = $urandom;
+                        
+            if(rd1 == prev_data && rd2 == prev_data) begin
+                $display("Addr: 0x%h -- 0x%h = 0x%h = 0x%h -- PASSED", wa3, rd1, rd2, prev_data);
+            end else begin
+                $display("Addr: 0x%h -- 0x%h = 0x%h = 0x%h -- FAILED", wa3, rd1, rd2, prev_data);
+                fail_count++;
+            end
+            
+            prev_data = wd3;
+        end
+        
+        // Print test results
+        if(fail_count > 0) begin
+            $display("FAILED: there were %d failers", fail_count);
+        end else begin
+            $display("PASSED!");
+        end
     end
 
 endmodule
