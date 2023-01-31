@@ -11,150 +11,37 @@
 # //  is prohibited from disclosure under the Trade Secrets Act,
 # //  18 U.S.C. Section 1905.
 # //
-# do regfile.do
-# ** Error (suppressible): (vdel-19) Failed to access library 'work' at "work".
-# No such file or directory. (errno = ENOENT)
-# ** Warning: (vdel-57) Library 'work' is missing or is not a valid ModelSim library.
-# ** Error: C:/modeltech64_2021.1/win64/vdel failed.
-# Error in macro ./regfile.do line 26
-# C:/modeltech64_2021.1/win64/vdel failed.
-#     while executing
-# "error [FixExecError $msg]"
-#     (procedure "vdel" line 6)
-#     invoked from within
-# "vdel -all"
-#     invoked from within
-# "if [file exists work] {
-#     vdel -all
-# }"
-do regfile.do
-# ** Error (suppressible): (vdel-19) Failed to access library 'work' at "work".
-# No such file or directory. (errno = ENOENT)
-# ** Warning: (vdel-57) Library 'work' is missing or is not a valid ModelSim library.
-# ** Error: C:/modeltech64_2021.1/win64/vdel failed.
-# Error in macro ./regfile.do line 26
-# C:/modeltech64_2021.1/win64/vdel failed.
-#     while executing
-# "error [FixExecError $msg]"
-#     (procedure "vdel" line 6)
-#     invoked from within
-# "vdel -all"
-#     invoked from within
-# "if [file exists work] {
-#     vdel -all
-# }"
-do regfile.do
-# ** Error (suppressible): (vdel-19) Failed to access library 'work' at "work".
-# No such file or directory. (errno = ENOENT)
-# ** Warning: (vdel-57) Library 'work' is missing or is not a valid ModelSim library.
-# ** Error: C:/modeltech64_2021.1/win64/vdel failed.
-# Error in macro ./regfile.do line 26
-# C:/modeltech64_2021.1/win64/vdel failed.
-#     while executing
-# "error [FixExecError $msg]"
-#     (procedure "vdel" line 6)
-#     invoked from within
-# "vdel -all"
-#     invoked from within
-# "if [file exists work] {
-#     vdel -all
-# }"
-do regfile.do
+# do FSM.do
 # Model Technology ModelSim SE-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
-# Start time: 20:42:15 on Jan 30,2023
-# vlog -reportprogress 300 regfile.sv regfile_tb.sv 
-# -- Compiling module regfile
-# -- Compiling module regfile_tb
+# Start time: 21:05:50 on Jan 30,2023
+# vlog -reportprogress 300 FSM.sv fsm_tb.sv 
+# -- Compiling module fsm
+# -- Compiling module fsm_tb
 # 
 # Top level modules:
-# 	regfile_tb
-# End time: 20:42:15 on Jan 30,2023, Elapsed time: 0:00:00
+# 	fsm_tb
+# End time: 21:05:50 on Jan 30,2023, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# vsim -voptargs="+acc" work.regfile 
-# Start time: 20:42:15 on Jan 30,2023
+# vsim -voptargs="+acc" work.fsm_tb 
+# Start time: 21:05:50 on Jan 30,2023
 # ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-143) Recognized 1 FSM in module "fsm(fast)".
 # Loading sv_std.std
-# Loading work.regfile(fast)
+# Loading work.fsm_tb(fast)
+# Loading work.fsm(fast)
 # .main_pane.list.interior.cs.body
 # .main_pane.wave.interior.cs.body.pw.wf
-# ** UI-Msg: (vish-4014) No objects found matching '/regfile/mut/mips/dp/rf/*'.
-# Error in macro ./regfile.do line 52
-# ** UI-Msg: (vish-4014) No objects found matching '/regfile/mut/mips/dp/rf/*'.
-#     while executing
-# "add wave -noupdate -divider -height 32 "Register File""
-run
-do regfile.do
-# ** Warning: (vdel-134) Unable to remove locked optimized design "_opt".  Locker is Pat@DESKTOP-FBGU09D.
-# ** Warning: (vlib-34) Library already exists at "work".
-# Errors: 0, Warnings: 1
-# Model Technology ModelSim SE-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
-# Start time: 20:42:45 on Jan 30,2023
-# vlog -reportprogress 300 regfile.sv regfile_tb.sv 
-# -- Compiling module regfile
-# -- Compiling module regfile_tb
-# 
-# Top level modules:
-# 	regfile_tb
-# End time: 20:42:45 on Jan 30,2023, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# End time: 20:42:46 on Jan 30,2023, Elapsed time: 0:00:31
-# Errors: 0, Warnings: 0
-# vsim -voptargs="+acc" work.regfile 
-# Start time: 20:42:46 on Jan 30,2023
-# ** Note: (vsim-8009) Loading existing optimized design _opt
-# Loading sv_std.std
-# Loading work.regfile(fast)
-# .main_pane.list.interior.cs.body
-# .main_pane.wave.interior.cs.body.pw.wf
-# ** UI-Msg: (vish-4014) No objects found matching '/regfile/mut/mips/dp/rf/*'.
-# Error in macro ./regfile.do line 52
-# ** UI-Msg: (vish-4014) No objects found matching '/regfile/mut/mips/dp/rf/*'.
-#     while executing
-# "add wave -noupdate -divider -height 32 "Register File""
-run
-run
-run
-run
-do regfile.do
-# ** Warning: (vdel-134) Unable to remove locked optimized design "_opt".  Locker is Pat@DESKTOP-FBGU09D.
-# ** Warning: (vlib-34) Library already exists at "work".
-# Errors: 0, Warnings: 1
-# Model Technology ModelSim SE-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
-# Start time: 20:43:51 on Jan 30,2023
-# vlog -reportprogress 300 regfile.sv regfile_tb.sv 
-# -- Compiling module regfile
-# -- Compiling module regfile_tb
-# 
-# Top level modules:
-# 	regfile_tb
-# End time: 20:43:52 on Jan 30,2023, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 0
-# End time: 20:43:53 on Jan 30,2023, Elapsed time: 0:01:07
-# Errors: 0, Warnings: 0
-# vsim -voptargs="+acc" work.regfile_tb 
-# Start time: 20:43:53 on Jan 30,2023
-# ** Note: (vsim-3812) Design is being optimized...
-# Loading sv_std.std
-# Loading work.regfile_tb(fast)
-# Loading work.regfile(fast)
-# .main_pane.list.interior.cs.body
-# .main_pane.wave.interior.cs.body.pw.wf
-# ** UI-Msg: (vish-4014) No objects found matching '/regfile_tb/mut/mips/dp/rf/*'.
-# Error in macro ./regfile.do line 52
-# ** UI-Msg: (vish-4014) No objects found matching '/regfile_tb/mut/mips/dp/rf/*'.
-#     while executing
-# "add wave -noupdate -divider -height 32 "Register File""
-run
-run
-run
-run
-run 120ns
-run 50000 ps
-run 50000 ps
-run 50000 ps
-run 50000 ps
-run 50000 ps
-run 15 ns
-# Causality operation skipped due to absence of debug database file
-run 50 ns
-run 5000 ns
+# reset, in||out: x, x||x
+# reset, in||out: 0, x||x
+# reset, in||out: 1, 0||1
+# reset, in||out: 1, 0||1
+# reset, in||out: 1, 1||0
+# reset, in||out: 1, 1||1
+# reset, in||out: 1, 0||0
+# reset, in||out: 1, 0||1
+# reset, in||out: 1, 0||1
+# reset, in||out: 1, 0||1
+# ** Note: $finish    : fsm_tb.sv(21)
+#    Time: 100 ns  Iteration: 0  Instance: /fsm_tb
+# 1
+# Break in Module fsm_tb at fsm_tb.sv line 21

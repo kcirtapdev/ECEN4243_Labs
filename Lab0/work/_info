@@ -1,8 +1,7 @@
 m255
 K4
 z2
-Z0 !s99 nomlopt
-R0
+!s99 nomlopt
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -10,73 +9,62 @@ R0
 !i10e 25
 !i10f 100
 cModel Technology
-Z1 dC:/Users/Pat/OneDrive/School/2023 Spring/Computer Architecture/Labs/Lab0/ECEN4243_Labs/Lab0
+Z0 dC:/Users/Pat/OneDrive/School/2023 Spring/Computer Architecture/Labs/Lab0/ECEN4243_Labs/Lab0
 T_opt
-!s110 1675132936
-V4glfKRgMAMNimZ?j:7D`B3
-04 7 4 work regfile fast 0
-=1-00d86155bcaf-63d88008-f5-63e8
-Z2 !s124 OEM100
-Z3 o-quiet -auto_acc_if_foreign -work work +acc
-Z4 tCvgOpt 0
+!s110 1675134351
+V]KE2gm6hCIS5DG03REg2n2
+04 6 4 work fsm_tb fast 0
+=1-00d86155bcaf-63d8858f-60-2610
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
 n@_opt
-Z5 OL;O;2021.1;73
+OL;O;2021.1;73
+vfsm
+Z2 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z3 !s110 1675134350
+!i10b 1
+!s100 Jbbk4Yag<4A8:FnSU5G<D0
+IiI66STRXcJ8:SbZY==j251
+S1
+R0
+Z4 w1675133993
+8FSM.sv
+FFSM.sv
+!i122 0
+L0 2 41
+Z5 VDg1SIo80bB@j0V0VzS_@n1
+Z6 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z7 !s108 1675134350.000000
+Z8 !s107 fsm_tb.sv|FSM.sv|
+Z9 !s90 -reportprogress|300|FSM.sv|fsm_tb.sv|
+!i113 0
+Z10 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R1
-T_opt1
-!s110 1675133034
-V[N0b6nOYDlz]?ID7CYmB83
-04 10 4 work regfile_tb fast 0
-=1-00d86155bcaf-63d88069-26e-6320
+vfsm_tb
 R2
 R3
-R4
-n@_opt1
-R5
-vregfile
-Z6 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
-Z7 !s110 1675133032
 !i10b 1
-!s100 ;W@K<JVK8]2;a`0W9D:dT3
-IV[_N938MUCnBFJ<6[AjNd3
+!s100 M;f2XUfe<ilOEB7<9Dk]60
+IOc4lZ@T@mg>a1cK:?dic60
 S1
-R1
-w1675132323
-8regfile.sv
-Fregfile.sv
+R0
+R4
+8fsm_tb.sv
+Ffsm_tb.sv
 !i122 0
-L0 21 21
-Z8 VDg1SIo80bB@j0V0VzS_@n1
-Z9 OL;L;2021.1;73
+L0 2 36
+R5
+R6
 r1
 !s85 0
 31
-Z10 !s108 1675133031.000000
-Z11 !s107 regfile_tb.sv|regfile.sv|
-Z12 !s90 -reportprogress|300|regfile.sv|regfile_tb.sv|
-!i113 0
-Z13 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-R4
-vregfile_tb
-R6
 R7
-!i10b 1
-!s100 [ZB>]@O1F9bn@>KC>1WkP1
-II;MzEO]omnIacKe1Jl[R60
-S1
-R1
-w1675132324
-8regfile_tb.sv
-Fregfile_tb.sv
-!i122 0
-L0 3 54
 R8
 R9
-r1
-!s85 0
-31
-R10
-R11
-R12
 !i113 0
-R13
-R4
+R10
+R1
