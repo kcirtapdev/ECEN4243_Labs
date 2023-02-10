@@ -69,7 +69,7 @@ int r_process(char* i_) {
   char rs2[6]; rs2[5] = '\0';
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
-  char funct7[7]; funct7[6] = '\0'; // declaration
+  char funct7[8]; funct7[7] = '\0'; // declaration
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
     rs2[i] = i_[31-24+i];            
@@ -81,20 +81,20 @@ int r_process(char* i_) {
   for(int i = 0; i < 7; i++) {
     funct7[i] = i_[i]; // now we got it :D
   }
+
   int Rs1 = bchar_to_int(rs1);
   int Rs2 = bchar_to_int(rs2);		   
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
-  int Funct7 = bchar_to_int(funct7); // yay its here now
-  printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Rd = %d\n Funct3 = %d\n\n",
-	  d_opcode, Rs1, Rs2, Rd, Funct3);
+  printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Rd = %d\n Funct3 = %d Funct7 = %s\n\n",
+	  d_opcode, Rs1, Rs2, Rd, Funct3, funct7);
   printf("\n");
-
+  
   if(!strcmp(d_opcode,"0110011")) {
 
     switch(Funct3) {
       case 0x0 :
-        if (Funct7 == 0x2) {
+        if (!strcmp(funct7,"0100000")) {
           printf("--- This is a SUB instruction. \n");
           SUB(Rd, Rs1, Rs2, Funct3);
           break;
@@ -121,7 +121,7 @@ int r_process(char* i_) {
         SLL(Rd, Rs1, Rs2, Funct3);
         break;
       case 0x5 :
-        if (Funct7 == 0x2) {
+        if (!strcmp(funct7,"0100000")) {
           printf("--- This is a SRA instruction \n");
           SRA(Rd, Rs1, Rs2, Funct3);
           break;
@@ -158,7 +158,7 @@ int i_process(char* i_) {
   char rs1[6]; rs1[5] = '\0';		   
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
-   char funct7[7]; funct7[6] = '\0'; // declaration for immmmmmeeedddiate
+  char funct7[7]; funct7[6] = '\0'; // declaration for immmmmmeeedddiate
   char imm[13]; imm[12] = '\0';
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
@@ -176,7 +176,6 @@ int i_process(char* i_) {
   int Rs1 = bchar_to_int(rs1);
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
-  int Funct7 = bchar_to_int(funct7); // yay its here now for imemediate
   int Imm = bchar_to_int(imm);
   printf ("Opcode = %s\n Rs1 = %d\n Imm = %d\n Rd = %d\n Funct3 = %d\n\n",
 	  d_opcode, Rs1, Imm, Rd, Funct3);
@@ -205,7 +204,7 @@ int i_process(char* i_) {
         SLLI(Rd, Rs1, Imm, Funct3);
         break;
       case 0x5 :
-        if (Funct7 == 0x2) {
+        if (!strcmp(funct7,"0100000")) {
           printf("--- This is an SRLI instruction. \n");
           SRLI(Rd, Rs1, Imm, Funct3);
           break;
@@ -341,6 +340,7 @@ int s_process(char* i_) {
   for(int i = 0; i < 7; i++) {
     imm[i] = i_[i]; // now we got it :D
   }
+
   int Rs1 = bchar_to_int(rs1);
   int Rs2 = bchar_to_int(rs2);		   
   int Rd = bchar_to_int(rd);
@@ -350,7 +350,20 @@ int s_process(char* i_) {
   printf("\n");
 
   if(!strcmp(d_opcode,"0100011")) {
-
+    switch(Funct3) {
+      case 0x0 :
+        printf("--- This is an SB instruction. \n");
+        SB(Rd, Rs1, Rs2, Imm);
+        break;
+      case 0x1 :
+        printf("--- This is an SH instruction. \n");
+        SH(Rd, Rs1, Rs2, Imm);
+        break;
+      case 0x2 :
+        printf("--- This is an SW instruction. \n");
+        SW(Rd, Rs1, Rs2, Imm);
+        break;
+    }
   }
   return 1;
 }
