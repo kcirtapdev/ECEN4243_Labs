@@ -28,7 +28,6 @@ int ADD (int Rd, int Rs1, int Rs2, int Funct3) {
   cur = CURRENT_STATE.REGS[Rs1] + CURRENT_STATE.REGS[Rs2];
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
-
 }
 
 int SUB (int Rd, int Rs1, int Rs2, int Funct3) {
@@ -45,7 +44,7 @@ int SLL (int Rd, int Rs1, int Rs2, int Funct3) {
   return 0;
 }
 
-int SLT  (int Rd, int Rs1, int Rs2, int Funct3) {
+int SLT (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
   cur = (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0;
   NEXT_STATE.REGS[Rd] = cur;
@@ -55,33 +54,34 @@ int SLT  (int Rd, int Rs1, int Rs2, int Funct3) {
 int SLTU (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
   cur = (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0; // Zero Extends??????????????????????
-  NEXT_STATE.REGS[Rd] = SIGNEXT(cur,12);
+  cur = SIGNEXT(cur,Rs1); // Zero ExtendsnsnnsnsnsnsnsDsds??????????????????????????????? 
+  NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int XOR  (int Rd, int Rs1, int Rs2, int Funct3) {
+int XOR (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
   cur = CURRENT_STATE.REGS[Rs1] ^ CURRENT_STATE.REGS[Rs2];
   NEXT_STATE.REGS[Rd] = cur;
-  return 
-  0;
+  return 0;
 }
 
-int SRL  (int Rd, int Rs1, int Rs2, int Funct3) {
+int SRL (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
   cur = CURRENT_STATE.REGS[Rs1] >> CURRENT_STATE.REGS[Rs2];
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int SRA  (int Rd, int Rs1, int Rs2, int Funct3) {
+int SRA (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] >> CURRENT_STATE.REGS[Rs2]; // MSB Extends?????????
-  NEXT_STATE.REGS[Rd] = SIGNEXT(cur,12);
+  cur = CURRENT_STATE.REGS[Rs1] >> CURRENT_STATE.REGS[Rs2];
+  cur = SIGNEXT(cur,31-Rs1); // MSB Extends
+  NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int OR  (int Rd, int Rs1, int Rs2, int Funct3) {
+int OR (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
   cur = (CURRENT_STATE.REGS[Rs1] | CURRENT_STATE.REGS[Rs2])?1:0;
   NEXT_STATE.REGS[Rd] = cur;
@@ -127,8 +127,9 @@ int SLTI (int Rd, int Rs1, int Imm, int Funct3) {
 
 int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < Imm)?1:0; // ZERO EXTENDSNSNSNS???????
-  NEXT_STATE.REGS[Rd] = SIGNEXT(cur,13);
+  cur = (CURRENT_STATE.REGS[Rs1] < Imm)?1:0;
+  cur = SIGNEXT(cur,Imm); // Zero Extends ????????????????????
+  NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
@@ -150,7 +151,7 @@ int SRLI (int Rd, int Rs1, int Imm, int Funct3) {
 int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
   cur = CURRENT_STATE.REGS[Rs1] >> Imm;
-  cur = SIGNEXT(cur,31-Imm); // Zero Extends
+  cur = SIGNEXT(cur,31-Imm); // MSB Extends
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
