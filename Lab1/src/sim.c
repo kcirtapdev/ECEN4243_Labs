@@ -56,7 +56,6 @@ int bchar_to_int(char* rsa) {
 }
 
 int r_process(char* i_) {
-
   char d_opcode[8];
   d_opcode[0] = i_[31-6]; 
   d_opcode[1] = i_[31-5]; 
@@ -332,10 +331,57 @@ int j_process(char* i_) {
 
 int u_process(char* i_) {
 
-  /* This function execute U type instructions */
 
-  /* Add U instructions here */ 
+  // LUI rd = {upimm, 12’b0}
+  char d_opcode[8];
+  d_opcode[0] = i_[31-6]; 
+  d_opcode[1] = i_[31-5]; 
+  d_opcode[2] = i_[31-4]; 
+  d_opcode[3] = i_[31-3];
+  d_opcode[4] = i_[31-2]; 
+  d_opcode[5] = i_[31-1]; 
+  d_opcode[6] = i_[31-0]; 
+  d_opcode[7] = '\0';	 
+  char imm[21]; 
+  char rd[6]; rd[5] = '\0';
 
+  // Old-fashioned method but works :)
+  imm[0] = i_[31-31]; 
+  imm[1] = i_[31-30]; 
+  imm[2] = i_[31-29]; 
+  imm[3] = i_[31-28];
+  imm[4] = i_[31-27]; 
+  imm[5] = i_[31-26]; 
+  imm[6] = i_[31-25];
+  imm[7] = i_[31-24];
+  imm[8] = i_[31-23];
+  imm[9] = i_[31-22];
+  imm[10] = i_[31-21];
+  imm[11] = i_[31-20];
+  imm[12] = i_[31-19];
+  imm[13] = i_[31-18];
+  imm[14] = i_[31-17];
+  imm[15] = i_[31-16];
+  imm[16] = i_[31-15];
+  imm[17] = i_[31-14];
+  imm[18] = i_[31-13];
+  imm[19] = i_[31-12];
+  imm[20] = '\0';  
+
+  //printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Imm = %d\n Funct3 = %d\n\n",
+	//  d_opcode, Rs1, Rs2, Imm, Funct3);
+  printf("\n");
+	   
+  for(int i = 0; i < 5; i++) {
+    rd[i] = i_[31-11+i];
+  }
+  int Rd = bchar_to_int(rd);
+  int Imm = bchar_to_int(imm);
+  
+  if (!strcmp(d_opcode,"0110111")) {
+      printf("--- This is an LUI instruction. \n");
+      LUI(Rd, Imm);
+  }
   return 1;
 
 }
@@ -390,13 +436,15 @@ int decode_and_execute(char* i_) {
     j_process(i_);
     return 5;
   }
-  if((i_[25] == '0') && (i_[26] == '0') &&
+
+  if((i_[25] == '0') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a U Type Instruction. \n");
     u_process(i_);
     return 6;
   }  
+
   if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
@@ -424,40 +472,13 @@ void process_instruction() {
   */   
 
   unsigned int inst_word = mem_read_32(CURRENT_STATE.PC);
-  unsigned int op = OPCODE(inst_word);
-  if (op == 0x0) { // if this aint got anymore instructions then we stop.
-    RUN_BIT = FALSE;
-  }
-
   printf("The instruction is: %x \n", inst_word);
-  char* bin_word = byte_to_binary32(inst_word);
-  int instr = decode_and_execute(bin_word);
-
-  switch(instr) {
-
-    case 1:
-    /*  char rs1[6]; rs1[5] = '\0';		   
-      char rd[6]; rd[5] = '\0';
-      char imm[13]; imm[12] = '\0';
-      for(int i = 0; i < 5; i++) {
-        rs1[i] = bin_word[31-19+i];
-        rd[i] = bin_word[31-11+i];
-      }
-      for(int i = 0; i < 12; i++) {
-        imm[i] = bin_word[31-31+i];
-      }
-      int Rs1 = bchar_to_int(rs1);
-      int Rd = bchar_to_int(rd);
-      int Imm = bchar_to_int(imm);
-      */printf("%d\n", bin_word[31]);
-      printf("%d\n", bin_word[31]);
-      printf("--------------------------------\n");
-      printf("%s \n", byte_to_binary32(inst_word));
-      printf("\n");
-      break;
-  }
-
+  printf("33222222222211111111110000000000\n");
+  printf("10987654321098765432109876543210\n");
+  printf("--------------------------------\n");
+  printf("%s \n", byte_to_binary32(inst_word));
+  printf("\n");
+  decode_and_execute(byte_to_binary32(inst_word));
   NEXT_STATE.PC += 4;
-  mem_write_32(CURRENT_STATE.PC, NEXT_STATE.PC);
   
 }

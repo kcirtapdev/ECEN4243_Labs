@@ -100,7 +100,7 @@ int AND (int Rd, int Rs1, int Rs2, int Funct3) {
 // I Instructions
 int ADDI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm,12);
+  cur = CURRENT_STATE.REGS[Rs1] + Imm;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -113,21 +113,21 @@ int LHU (char* i_);
 
 int SLLI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] << SIGNEXT(Imm,12);
+  cur = CURRENT_STATE.REGS[Rs1] << Imm;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int SLTI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < SIGNEXT(Imm,12))?1:0;
+  cur = (CURRENT_STATE.REGS[Rs1] < Imm)?1:0;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < SIGNEXT(Imm,12))?1:0; // ZERO EXTENDSNSNSNS???????
+  cur = (CURRENT_STATE.REGS[Rs1] < Imm)?1:0; // ZERO EXTENDSNSNSNS???????
   NEXT_STATE.REGS[Rd] = SIGNEXT(cur,13);
   return 0;
 }
@@ -135,35 +135,36 @@ int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
 
 int XORI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] ^ SIGNEXT(Imm,12);
+  cur = CURRENT_STATE.REGS[Rs1] ^ Imm;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int SRLI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] >> SIGNEXT(Imm,12);
+  cur = CURRENT_STATE.REGS[Rs1] >> Imm;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] >> SIGNEXT(Imm,12); // MSB EXTENDS?????????
-  NEXT_STATE.REGS[Rd] = SIGNEXT(cur,12);
+  cur = CURRENT_STATE.REGS[Rs1] >> Imm;
+  cur = SIGNEXT(cur,31-Imm); // Zero Extends
+  NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int ORI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] | SIGNEXT(Imm,12))?1:0;
+  cur = (CURRENT_STATE.REGS[Rs1] | Imm)?1:0;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] & SIGNEXT(Imm,12))?1:0;
+  cur = (CURRENT_STATE.REGS[Rs1] & Imm)?1:0;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -178,9 +179,9 @@ int AUIPC (int Rs1, int Rs2, int Imm, int Funct3) {
   return 0;
 }
 
-int LUI (int Rd, int Rs1, int Imm, int Funct3) {
+int LUI (int Rd, int Imm) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] << 12;
+  cur = Imm << 12;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
