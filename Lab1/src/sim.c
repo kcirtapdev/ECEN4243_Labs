@@ -360,42 +360,49 @@ int decode_and_execute(char* i_) {
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is an Immediate Type Instruction. \n");
     i_process(i_);
+    return 1;
   }
   if((i_[25] == '0') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is an R Type Instruction. \n");
     r_process(i_);
+    return 2;
   }    
   if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '0') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a B Type Instruction. \n");
     b_process(i_);
+    return 3;
   }
   if((i_[25] == '0') && (i_[26] == '1') &&
      (i_[27] == '0') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a S Type Instruction. \n");
     s_process(i_);
+    return 4;
   }  
   if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '0') && (i_[28] == '1') &&
      (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a J Type Instruction. \n");
     j_process(i_);
+    return 5;
   }
   if((i_[25] == '0') && (i_[26] == '0') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a U Type Instruction. \n");
     u_process(i_);
+    return 6;
   }  
   if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a Software Interruption Instruction. \n");
     interruption_process(i_);
+    return 7;
   }
 
   return 0;
@@ -423,7 +430,32 @@ void process_instruction() {
   }
 
   printf("The instruction is: %x \n", inst_word);
-  decode_and_execute(byte_to_binary32(inst_word));
+  char* bin_word = byte_to_binary32(inst_word);
+  int instr = decode_and_execute(bin_word);
+
+  switch(instr) {
+
+    case 1:
+    /*  char rs1[6]; rs1[5] = '\0';		   
+      char rd[6]; rd[5] = '\0';
+      char imm[13]; imm[12] = '\0';
+      for(int i = 0; i < 5; i++) {
+        rs1[i] = bin_word[31-19+i];
+        rd[i] = bin_word[31-11+i];
+      }
+      for(int i = 0; i < 12; i++) {
+        imm[i] = bin_word[31-31+i];
+      }
+      int Rs1 = bchar_to_int(rs1);
+      int Rd = bchar_to_int(rd);
+      int Imm = bchar_to_int(imm);
+      */printf("%d\n", bin_word[31]);
+      printf("%d\n", bin_word[31]);
+      printf("--------------------------------\n");
+      printf("%s \n", byte_to_binary32(inst_word));
+      printf("\n");
+      break;
+  }
 
   NEXT_STATE.PC += 4;
   mem_write_32(CURRENT_STATE.PC, NEXT_STATE.PC);
