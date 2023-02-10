@@ -53,7 +53,7 @@ int SLT (int Rd, int Rs1, int Rs2, int Funct3) {
 
 int SLTU (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0; // Zero Extends??????????????????????
+  cur = (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0; 
   cur = SIGNEXT(cur,Rs1); // Zero ExtendsnsnnsnsnsnsnsDsds??????????????????????????????? 
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -172,11 +172,10 @@ int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
 
 
 // U Instruction
-int AUIPC (int Rs1, int Rs2, int Imm, int Funct3) {
+int AUIPC (int Rd, int Imm) {
   int cur = 0;
   Imm = Imm << 12;
-  if (CURRENT_STATE.REGS[Rs1] != CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = CURRENT_STATE.PC + (SIGNEXT(Imm,13));
+  NEXT_STATE.REGS[Rd] =  CURRENT_STATE.PC + (SIGNEXT(Imm,13));
   return 0;
 }
 
