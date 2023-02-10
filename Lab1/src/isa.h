@@ -174,8 +174,8 @@ int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
 // U Instruction
 int AUIPC (int Rd, int Imm) {
   int cur = 0;
-  Imm = Imm << 12;
-  NEXT_STATE.REGS[Rd] =  CURRENT_STATE.PC + (SIGNEXT(Imm,13));
+  cur = Imm << 12;
+  NEXT_STATE.REGS[Rd] =  CURRENT_STATE.PC + cur;
   return 0;
 }
 
