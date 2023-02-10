@@ -70,6 +70,7 @@ int r_process(char* i_) {
   char rs2[6]; rs2[5] = '\0';
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
+  char funct7[7]; funct7[6] = '\0'; // declaration
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
     rs2[i] = i_[31-24+i];            
@@ -78,23 +79,68 @@ int r_process(char* i_) {
   for(int i = 0; i < 3; i++) {
     funct3[i] = i_[31-14+i];
   }
+  for(int i = 0; i < 7; i++) {
+    funct7[i] = i_[i]; // now we got it :D
+  }
   int Rs1 = bchar_to_int(rs1);
   int Rs2 = bchar_to_int(rs2);		   
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
+  int Funct7 = bchar_to_int(funct7); // yay its here now
   printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Rd = %d\n Funct3 = %d\n\n",
 	  d_opcode, Rs1, Rs2, Rd, Funct3);
   printf("\n");
 
-  /* Example - use and replicate */
   if(!strcmp(d_opcode,"0110011")) {
-    printf("--- This is an ADD instruction. \n");
-    ADD(Rd, Rs1, Rs2, Funct3);
-    return 0;
+
+    switch(Funct3) {
+      case 0x0 :
+        if (Funct7 == 0x2) {
+          printf("--- This is a SUB instruction. \n");
+          SUB(Rd, Rs1, Rs2, Funct3);
+          break;
+        }
+        else {
+          printf("--- This is a ADD instruction. \n");
+          ADD(Rd, Rs1, Rs2, Funct3);
+          break;
+        }
+      case 0x4 :
+        printf("--- This is a XOR instruction \n");
+        XOR(Rd, Rs1, Rs2, Funct3);
+        break;
+      case 0x6 :
+        printf("--- This is a OR instruction \n");
+        OR(Rd, Rs1, Rs2, Funct3);
+        break;
+      case 0x7 :
+        printf("--- This is a AND instruction \n");
+        AND(Rd, Rs1, Rs2, Funct3);
+        break;
+      case 0x1 :
+        printf("--- This is a SLL instruction \n");
+        SLL(Rd, Rs1, Rs2, Funct3);
+        break;
+      case 0x5 :
+        if (Funct7 == 0x2) {
+          printf("--- This is a SRA instruction \n");
+          SRA(Rd, Rs1, Rs2, Funct3);
+          break;
+        } else {
+          printf("--- This is a SRL instruction \n");
+          SRL(Rd, Rs1, Rs2, Funct3);
+          break;
+        }
+      case 0x2 :
+        printf("--- This is a SLT instruction \n");
+        SLT(Rd, Rs1, Rs2, Funct3);
+        break;
+      case 0x3 :
+        printf("--- This is a SLTU instruction \n");
+        SLTU(Rd, Rs1, Rs2, Funct3);
+        break;
+    }
   }
-
-  /* Add other data instructions here */ 
-
 
   return 1;	
 }
@@ -110,15 +156,10 @@ int i_process(char* i_) {
   d_opcode[5] = i_[31-1]; 
   d_opcode[6] = i_[31-0]; 
   d_opcode[7] = '\0';
-  char d_cond[5];
-  d_cond[0] = i_[0]; 
-  d_cond[1] = i_[1]; 
-  d_cond[2] = i_[2]; 
-  d_cond[3] = i_[3]; 
-  d_cond[4] = '\0';
   char rs1[6]; rs1[5] = '\0';		   
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
+   char funct7[7]; funct7[6] = '\0'; // declaration for immmmmmeeedddiate
   char imm[13]; imm[12] = '\0';
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
@@ -130,141 +171,60 @@ int i_process(char* i_) {
   for(int i = 0; i < 3; i++) {
     funct3[i] = i_[31-14+i];
   }
-  char rn[5]; rn[4] = '\0';
-  char rd[5]; rd[4] = '\0';
-  char operand2[13]; operand2[12] = '\0';
-  for(int i = 0; i < 4; i++) {
-    rn[i] = i_[12+i];
-    rd[i] = i_[16+i];
-  }
-  for(int i = 0; i < 12; i++) {
-    operand2[i] = i_[20+i];
+  for(int i = 0; i < 7; i++) {
+    funct7[i] = i_[i]; // now we got it :D for imemememememem
   }
   int Rs1 = bchar_to_int(rs1);
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
+  int Funct7 = bchar_to_int(funct7); // yay its here now for imemediate
   int Imm = bchar_to_int(imm);
-  int Operand2 = bchar_to_int(operand2);
-  int I = i_[6]-'0';
-  int S = i_[11]-'0';
-  int CC = bchar_to_int(d_cond);
   printf ("Opcode = %s\n Rs1 = %d\n Imm = %d\n Rd = %d\n Funct3 = %d\n\n",
 	  d_opcode, Rs1, Imm, Rd, Funct3);
   printf("\n");
 
-  
-  // use for LSL and LSR case
-  char shamt5[6]; char sh[3]; char rm[5];
-  if(!I) {
-    shamt5[5] = '\0'; sh[2] = '\0'; rm[4] = '\0';
-    for(int i = 0; i < 6; i++) {
-      if(i<2) 
-        sh[i] = operand2[i+5];
-      if(i<4)
-        rm[i] = operand2[i+8];
-      shamt5[i] = operand2[i];
+  if(!strcmp(d_opcode,"0010011")) {
+    switch(Funct3) {
+      case 0x0 :
+        printf("--- This is an ADDI instruction. \n");
+        ADDI(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x4 :
+        printf("--- This is an XORI instruction. \n");
+        XORI(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x6 :
+        printf("--- This is an ORI instruction. \n");
+        ORI(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x7 :
+        printf("--- This is an ANDI instruction. \n");
+        ANDI(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x1 :
+        printf("--- This is an SLLI instruction. \n");
+        SLLI(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x5 :
+        if (Funct7 == 0x2) {
+          printf("--- This is an SRLI instruction. \n");
+          SRLI(Rd, Rs1, Imm, Funct3);
+          break;
+        } else {
+          printf("--- This is an SRAI instruction. \n");
+          SRAI(Rd, Rs1, Imm, Funct3);
+          break;
+        }
+      case 0x2 :
+        printf("--- This is an SLTI instruction. \n");
+        SLTI(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x3 :
+        printf("--- This is an SLTIU instruction. \n");
+        SLTIU(Rd, Rs1, Imm, Funct3);
+        break;
     }
-    printf("shamt5 = %s\n sh = %s\n Rm = %s\n", shamt5, sh, rm);
-  }
-int Rm = bchar_to_int(rm);
-  /* Example - use and replicate */
-  if(!strcmp(d_opcode,"0100")) {
-    printf("--- This is an ADD instruction. \n");
-    ADD(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }	
-
-  /* Add other data instructions here */ 
-  else if(!strcmp(d_opcode, "0000")) {
-    printf("--- This is an AND instruction. \n");
-    AND(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "0001")) {
-    printf("--- This is an EOR instruction. \n");
-    AND(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "0010")) {
-    printf("--- This is a SUB instruction. \n");
-    SUB(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "0011")) {
-    printf("--- This is an RSB instruction. \n");
-    RSB(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "0101")) {
-    printf("--- This is an ADC instruction. \n");
-    ADC(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "0110")) {
-    printf("--- This is an SBC instruction. \n");
-    SBC(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "0111")) {
-    printf("--- This is an RSC instruction. \n");
-    RSC(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-  
-  else if(!strcmp(d_opcode, "1000")) {
-    printf("--- This is a TST instruction. \n");
-    TST(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "1001")) {
-    printf("--- This is a TEQ instruction. \n");
-    TEQ(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "1010")) {
-    printf("--- This is a CMP instruction. \n");
-    CMP(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "1011")) {
-    printf("--- This is a CMN instruction. \n");
-    CMN(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "1100")) {
-    printf("--- This is an ORR instruction. \n");
-    ORR(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-  
-  // Takes care of LSL LSR ASR and ROR
-  else if(!strcmp(d_opcode, "1101")) {
-    printf("--- This is an MOV instruction. \n");
-      MOV(Rd, Rn, Operand2, I, S, CC);
-      return 0;
-  }
-
-  else if(!strcmp(d_opcode, "1110")) {
-    printf("--- This is a BIC instruction. \n");
-    BIC(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
-
-  else if(!strcmp(d_opcode, "1111")) {
-    printf("--- This is an MVN instruction. \n");
-    MVN(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
+  }	 
 
   return 1;	
 }
@@ -314,15 +274,38 @@ int b_process(char* i_) {
   int Imm = bchar_to_int(imm);
   printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Imm = %d\n Funct3 = %d\n\n",
 	  d_opcode, Rs1, Rs2, Imm, Funct3);
-  printf("\n");    
+  printf("\n");
 
   /* Add branch instructions here */
 
   /* This is an Add Immediate Instruciton */
   if(!strcmp(d_opcode,"1100011")) {
-    printf("--- This is an BNE instruction. \n");
-    BNE(Rs1, Rs2, Imm, Funct3);
-    return 0;
+    switch(Funct3) {
+      case 0x0 :
+        printf("--- This is an BEQ instruction. \n");
+        BEQ(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x1 :
+        printf("--- This is an BNE instruction. \n");
+        BNE(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x4 :
+        printf("--- This is an BLT instruction. \n");
+        BLT(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x5 :
+        printf("--- This is an BGE instruction. \n");
+        BGE(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x6 :
+        printf("--- This is an BLTU instruction. \n");
+        BLTU(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x7 :
+        printf("--- This is an BGEU instruction. \n");
+        BGEU(Rs1, Rs2, Imm, Funct3);
+        break;
+    }
   }	    
 
   return 1;
@@ -332,8 +315,6 @@ int b_process(char* i_) {
 int s_process(char* i_) {
 
   /* This function execute S type instructions */
-
-  /* Add store instructions here */ 
 
   return 1;
 
@@ -436,14 +417,15 @@ void process_instruction() {
   */   
 
   unsigned int inst_word = mem_read_32(CURRENT_STATE.PC);
+  unsigned int op = OPCODE(inst_word);
+  if (op == 0x0) { // if this aint got anymore instructions then we stop.
+    RUN_BIT = FALSE;
+  }
+
   printf("The instruction is: %x \n", inst_word);
-  printf("33222222222211111111110000000000\n");
-  printf("10987654321098765432109876543210\n");
-  printf("--------------------------------\n");
-  printf("%s \n", byte_to_binary32(inst_word));
-  printf("\n");
   decode_and_execute(byte_to_binary32(inst_word));
 
   NEXT_STATE.PC += 4;
-
+  mem_write_32(CURRENT_STATE.PC, NEXT_STATE.PC);
+  
 }
