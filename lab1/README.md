@@ -40,5 +40,13 @@ that we have available.
 * ori
 * andi
 
+### B Instructions
+* BEQ
+* BNE
+* BLT
+* BGE
+* BLTU
+* BGEU
+
 ### U Instructions
 * lui

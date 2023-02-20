@@ -305,8 +305,32 @@ int b_process(char* i_) {
 
   /* This is an Add Immediate Instruciton */
   if(!strcmp(d_opcode,"1100011")) {
-    printf("--- This is an BNE instruction. \n");
-    BNE(Rs1, Rs2, Imm, Funct3);
+    switch(Funct3) {
+      case 0x0:
+        printf("--- This is an BEQ instruction. \n");
+        BEQ(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x1:
+        printf("--- This is an BNE instruction. \n");
+        BNE(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x4:
+        printf("--- This is an BLT instruction. \n");
+        BLT(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x5:
+        printf("--- This is an BGE instruction. \n");
+        BGE(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x6:
+        printf("--- This is an BLTU instruction. \n");
+        BLTU(Rs1, Rs2, Imm, Funct3);
+        break;
+      case 0x7:
+        printf("--- This is an BGEU instruction. \n");
+        BGEU(Rs1, Rs2, Imm, Funct3);
+        break;
+    }
     return 0;
   }	    
 
