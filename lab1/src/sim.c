@@ -87,7 +87,7 @@ int r_process(char* i_) {
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
   printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Rd = %d\n Funct3 = %d Funct7 = %s\n\n",
-	  d_opcode, Rs1, Rs2, Rd, Funct3, funct7);
+	  d_opcode, Rs1, Rs2, Rd, Funct3, "111");
   printf("\n");
   
   if(!strcmp(d_opcode,"0110011")) {
@@ -158,7 +158,6 @@ int i_process(char* i_) {
   char rs1[6]; rs1[5] = '\0';		   
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
-  char funct7[7]; funct7[6] = '\0'; // declaration for immediate
   char imm[13]; imm[12] = '\0';
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
@@ -170,15 +169,19 @@ int i_process(char* i_) {
   for(int i = 0; i < 3; i++) {
     funct3[i] = i_[31-14+i];
   }
+
+  char funct7[8];
   for(int i = 0; i < 7; i++) {
     funct7[i] = i_[i];
   }
+  funct7[7] = '\0';
+
   int Rs1 = bchar_to_int(rs1);
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
   int Imm = bchar_to_int(imm);
-  printf ("Opcode = %s\n Rs1 = %d\n Imm = %d\n Rd = %d\n Funct3 = %d\n\n",
-	  d_opcode, Rs1, Imm, Rd, Funct3);
+  printf ("Opcode = %s\n Rs1 = %d\n Imm = %d\n Rd = %d\n Funct3 = %d\n Funct7 = %s\n",
+	  d_opcode, Rs1, Imm, Rd, Funct3, funct7);
   printf("\n");
 
   if(!strcmp(d_opcode,"0010011")) {
@@ -205,12 +208,12 @@ int i_process(char* i_) {
         break;
       case 0x5 :
         if (!strcmp(funct7,"0100000")) {
-          printf("--- This is an SRLI instruction. \n");
-          SRLI(Rd, Rs1, Imm, Funct3);
-          break;
-        } else {
           printf("--- This is an SRAI instruction. \n");
           SRAI(Rd, Rs1, Imm, Funct3);
+          break;
+        } else {
+          printf("--- This is an SRLI instruction. \n");
+          SRLI(Rd, Rs1, Imm, Funct3);
           break;
         }
       case 0x2 :
@@ -231,19 +234,19 @@ int i_process(char* i_) {
         break;
       case 0x1:
         printf("--- This is an LH instruction. \n");
-        LH(Rd, Imm, Funct3);
+        LH(Rd, Rs1, Imm, Funct3);
         break;
       case 0x2:
         printf("--- This is an LW instruction. \n");
-        LW(Rd, Imm, Funct3);
+        LW(Rd, Rs1, Imm, Funct3);
         break;
       case 0x4:
         printf("--- This is an LBU instruction. \n");
-        LBU(Rd, Imm, Funct3);
+        LBU(Rd, Rs1, Imm, Funct3);
         break;
       case 0x5:
         printf("--- This is an LHU instruction. \n");
-        LHU(Rd, Imm, Funct3);
+        LHU(Rd, Rs1, Imm, Funct3);
         break;
     }
   }

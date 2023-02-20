@@ -27,6 +27,18 @@ that we have available.
 ### I Instructions
 * addi
 * lb
+* lh
+* lw
+* lbu
+* lhu
+* slli
+* slti
+* sltiu
+* xori
+* srli
+* srai
+* ori
+* andi
 
 ### U Instructions
 * lui

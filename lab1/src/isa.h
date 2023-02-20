@@ -22,11 +22,11 @@
 
 // Helper macros:
 #define OLD_SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb))) ? ~((1 << (sb))-1) : 0))
-#define DROP_ZEROS(v, sb) (v << (32-sb)) >> (32-sb)
+#define DROP_ZEROS(v, sb) (v << (31-sb)) >> (31-sb)
 
 // New macros: value (v); sign bit (sb)
 #define SIGNEXT(v, sb) OLD_SIGNEXT(DROP_ZEROS(v, sb), sb)
-#define ZEROEXT(v, sb) (~0U >> (32-sb)) & v
+#define ZEROEXT(v, sb) (~0U >> (31-sb)) & v
 
 // R Instructions
 int ADD (int Rd, int Rs1, int Rs2, int Funct3) {
@@ -119,41 +119,39 @@ int ADDI (int Rd, int Rs1, int Imm, int Funct3) {
 int LB (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
   int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
-  printf("Address: %d\n", (CURRENT_STATE.REGS[Rs1] + Imm));
-  printf("valInMem: %d\n", valInMem);
   cur = SIGNEXT(valInMem, 7);
-  printf("cur: %d\n", cur);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int LH (int Rd, int Rs1, int Funct3) {
+int LH (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int cRs1 = CURRENT_STATE.REGS[Rs1];
-  cur = SIGNEXT(cRs1, 16);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  cur = SIGNEXT(valInMem, 15);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int LW (int Rd, int Rs1, int Funct3) {
+int LW (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1];
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  cur = valInMem;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int LBU (int Rd, int Rs1, int Funct3) {
+int LBU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int cRs1 = CURRENT_STATE.REGS[Rs1];
-  cur = ZEROEXT(cRs1, 8);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  cur = ZEROEXT(valInMem, 7);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
-int LHU (int Rd, int Rs1, int Funct3) {
+int LHU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int cRs1 = CURRENT_STATE.REGS[Rs1];
-  cur = ZEROEXT(cRs1, 16);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  cur = ZEROEXT(valInMem, 15);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -183,9 +181,10 @@ int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
 
 int XORI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] ^ Imm;
+  cur = CURRENT_STATE.REGS[Rs1] ^ SIGNEXT(Imm, 11);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
+  // TODO: sign extend!
 }
 
 int SRLI (int Rd, int Rs1, int Imm, int Funct3) {
@@ -206,14 +205,14 @@ int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
 
 int ORI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] | Imm);
+  cur = CURRENT_STATE.REGS[Rs1] | SIGNEXT(Imm, 11);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
 
 int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] & Imm);
+  cur = CURRENT_STATE.REGS[Rs1] & SIGNEXT(Imm, 11);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
