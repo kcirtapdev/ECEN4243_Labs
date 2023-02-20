@@ -15,12 +15,17 @@
 #include <string.h>
 #include "shell.h"
 
+// OLD_SIGNEXT is flawed. It cannot sign extend a negative number into 
+// a positive number even when "sb" falls on a zero.
 //
-// MACRO: Check sign bit (sb) of (v) to see if negative
-//   if no, just give number
-//   if yes, sign extend (e.g., 0x80_0000 -> 0xFF80_0000)
-//
-#define SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb))) ? ~((1 << (sb))-1) : 0))
+// This is fixed with the DROP_ZEROS helper macro.
+
+// Helper macros:
+#define OLD_SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb))) ? ~((1 << (sb))-1) : 0))
+#define DROP_ZEROS(v, sb) (v << (32-sb)) >> (32-sb)
+
+// New macros: value (v); sign bit (sb)
+#define SIGNEXT(v, sb) OLD_SIGNEXT(DROP_ZEROS(v, sb), sb)
 #define ZEROEXT(v, sb) (~0U >> (32-sb)) & v
 
 // R Instructions
@@ -113,8 +118,11 @@ int ADDI (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LB (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1]);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  printf("Address: %d\n", (CURRENT_STATE.REGS[Rs1] + Imm));
+  printf("valInMem: %d\n", valInMem);
   cur = SIGNEXT(valInMem, 7);
+  printf("cur: %d\n", cur);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
