@@ -10,3 +10,22 @@ also use the simple RISC-V intepreter available here:
 https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/.
 However, the best way to compile something is using RISC-V toolchain
 that we have available.
+
+## Verified working instructions
+### R Instructions
+* add
+* sub
+* sll
+* slt
+* sltu
+* xor
+* srl
+* sra
+* or
+* and
+
+### I Instructions
+* addi
+
+### U Instructions
+* lui

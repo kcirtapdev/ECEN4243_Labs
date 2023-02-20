@@ -47,7 +47,9 @@ int SLL (int Rd, int Rs1, int Rs2, int Funct3) {
 
 int SLT (int Rd, int Rs1, int Rs2, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2]);
+  int cRs1 = CURRENT_STATE.REGS[Rs1];
+  int cRs2 = CURRENT_STATE.REGS[Rs2];
+  cur = (cRs1 < cRs2);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -104,7 +106,7 @@ int AND (int Rd, int Rs1, int Rs2, int Funct3) {
 // I Instructions
 int ADDI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm,12);
+  cur = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm,11);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -218,7 +220,7 @@ int AUIPC (int Rd, int Upimm) {
   return 0;
 }
 
-int LUI (int Rd, int Uimm) {
+int LUI (int Rd, int Upimm) {
   int cur = 0;
   cur = Upimm << 12;
   NEXT_STATE.REGS[Rd] = cur;
