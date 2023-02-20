@@ -111,10 +111,10 @@ int ADDI (int Rd, int Rs1, int Imm, int Funct3) {
   return 0;
 }
 
-int LB (int Rd, int Rs1, int Funct3) {
+int LB (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int cRs1 = CURRENT_STATE.REGS[Rs1];
-  cur = SIGNEXT(cRs1, 8);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1]);
+  cur = SIGNEXT(valInMem, 7);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -142,7 +142,7 @@ int LBU (int Rd, int Rs1, int Funct3) {
   return 0;
 }
 
-int LBH (int Rd, int Rs1, int Funct3) {
+int LHU (int Rd, int Rs1, int Funct3) {
   int cur = 0;
   int cRs1 = CURRENT_STATE.REGS[Rs1];
   cur = ZEROEXT(cRs1, 16);
@@ -216,7 +216,7 @@ int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
 int AUIPC (int Rd, int Upimm) {
   int cur = 0;
   cur = Upimm << 12;
-  NEXT_STATE.REGS[Rd] = (CURRENT_STATE.PC - 4) + cur; // TODO: Should this be (PC - 4)?
+  NEXT_STATE.REGS[Rd] = (CURRENT_STATE.PC) + cur; // TODO: Should this be (PC - 4)?
   return 0;
 }
 

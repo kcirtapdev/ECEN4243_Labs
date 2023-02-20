@@ -158,7 +158,7 @@ int i_process(char* i_) {
   char rs1[6]; rs1[5] = '\0';		   
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
-  char funct7[7]; funct7[6] = '\0'; // declaration for immmmmmeeedddiate
+  char funct7[7]; funct7[6] = '\0'; // declaration for immediate
   char imm[13]; imm[12] = '\0';
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
@@ -171,7 +171,7 @@ int i_process(char* i_) {
     funct3[i] = i_[31-14+i];
   }
   for(int i = 0; i < 7; i++) {
-    funct7[i] = i_[i]; // now we got it :D for imemememememem
+    funct7[i] = i_[i];
   }
   int Rs1 = bchar_to_int(rs1);
   int Rd = bchar_to_int(rd);
@@ -222,7 +222,31 @@ int i_process(char* i_) {
         SLTIU(Rd, Rs1, Imm, Funct3);
         break;
     }
-  }	 
+  }	
+  else if(!strcmp(d_opcode,"0000011")) {
+    switch(Funct3) {
+      case 0x0:
+        printf("--- This is an LB instruction. \n");
+        LB(Rd, Rs1, Imm, Funct3);
+        break;
+      case 0x1:
+        printf("--- This is an LH instruction. \n");
+        LH(Rd, Imm, Funct3);
+        break;
+      case 0x2:
+        printf("--- This is an LW instruction. \n");
+        LW(Rd, Imm, Funct3);
+        break;
+      case 0x4:
+        printf("--- This is an LBU instruction. \n");
+        LBU(Rd, Imm, Funct3);
+        break;
+      case 0x5:
+        printf("--- This is an LHU instruction. \n");
+        LHU(Rd, Imm, Funct3);
+        break;
+    }
+  }
 
   return 1;	
 }
@@ -386,37 +410,49 @@ int decode_and_execute(char* i_) {
     printf("- This is an Immediate Type Instruction. \n");
     i_process(i_);
   }
-  if((i_[25] == '0') && (i_[26] == '1') &&
+  else if((i_[25] == '0') && (i_[26] == '0') &&
+     (i_[27] == '0') && (i_[28] == '0') &&
+     (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
+    printf("- This is an Immediate Type Instruction. \n");
+    i_process(i_);
+  }
+  else if((i_[25] == '0') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is an R Type Instruction. \n");
     r_process(i_);
   }    
-  if((i_[25] == '1') && (i_[26] == '1') &&
+  else if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '0') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a B Type Instruction. \n");
     b_process(i_);
   }
-  if((i_[25] == '0') && (i_[26] == '1') &&
+  else if((i_[25] == '0') && (i_[26] == '1') &&
      (i_[27] == '0') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a S Type Instruction. \n");
     s_process(i_);
   }  
-  if((i_[25] == '1') && (i_[26] == '1') &&
+  else if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '0') && (i_[28] == '1') &&
      (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a J Type Instruction. \n");
     j_process(i_);
   }
-  if((i_[25] == '0') && (i_[26] == '1') &&
+  else if((i_[25] == '0') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a U Type Instruction. \n");
     u_process(i_);
-  }  
-  if((i_[25] == '1') && (i_[26] == '1') &&
+  }
+  else if((i_[25] == '0') && (i_[26] == '0') &&
+     (i_[27] == '1') && (i_[28] == '0') &&
+     (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
+    printf("- This is a U Type Instruction. \n");
+    u_process(i_);
+  }    
+  else if((i_[25] == '1') && (i_[26] == '1') &&
      (i_[27] == '1') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is a Software Interruption Instruction. \n");
@@ -443,8 +479,6 @@ void process_instruction() {
 
   unsigned int inst_word = mem_read_32(CURRENT_STATE.PC);
   printf("The instruction is: %x \n", inst_word);
-  printf("33222222222211111111110000000000\n");
-  printf("10987654321098765432109876543210\n");
   printf("--------------------------------\n");
   printf("%s \n", byte_to_binary32(inst_word));
   printf("\n");
