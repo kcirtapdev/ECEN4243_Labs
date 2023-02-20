@@ -26,6 +26,7 @@ that we have available.
 
 ### I Instructions
 * addi
+* lb
 
 ### U Instructions
 * lui
