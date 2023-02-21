@@ -13,40 +13,40 @@ that we have available.
 
 ## Verified working instructions
 ### R Instructions
-* add
-* sub
-* sll
-* slt
-* sltu
-* xor
-* srl
-* sra
-* or
-* and
+* add (all)
+* sub (all)
+* sll (all)
+* slt (all)
+* sltu (all)
+* xor (all)
+* srl (all)
+* sra (all)
+* or (all)
+* and (all)
 
 ### I Instructions
-* addi
-* lb
-* lh
-* lw
-* lbu
-* lhu
-* slli
-* slti
-* sltiu
-* xori
-* srli
-* srai
-* ori
-* andi
+* addi (all)
+* lb (all)
+* lh (all)
+* lw (all)
+* lbu (all)
+* lhu (all)
+* slli (all)
+* slti (all)
+* sltiu (all)
+* xori (all)
+* srli (all)
+* srai (all)
+* ori (all)
+* andi (all)
 
 ### B Instructions
-* BEQ
-* BNE
-* BLT
-* BGE
-* BLTU
-* BGEU
+* BEQ (all)
+* BNE (all)
+* BLT (all)
+* BGE (all)
+* BLTU (all)
+* BGEU (all)
 
 ### U Instructions
-* lui
+* lui (all)

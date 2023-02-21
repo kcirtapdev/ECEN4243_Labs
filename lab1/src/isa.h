@@ -18,14 +18,14 @@
 // OLD_SIGNEXT is flawed. It cannot sign extend a negative number into 
 // a positive number even when "sb" falls on a zero.
 //
-// This is fixed with the DROP_ZEROS helper macro.
+// This is fixed with the DROP_BITS helper macro.
 
 // Helper macros:
 #define OLD_SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb))) ? ~((1 << (sb))-1) : 0))
-#define DROP_ZEROS(v, sb) (v << (31-sb)) >> (31-sb)
+#define DROP_BITS(v, sb) (v << (31-sb)) >> (31-sb)
 
 // New macros: value (v); sign bit (sb)
-#define SIGNEXT(v, sb) OLD_SIGNEXT(DROP_ZEROS(v, sb), sb)
+#define SIGNEXT(v, sb) OLD_SIGNEXT(DROP_BITS(v, sb), sb)
 #define ZEROEXT(v, sb) (~0U >> (31-sb)) & v
 
 // R Instructions
@@ -118,7 +118,7 @@ int ADDI (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LB (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 7));
   cur = SIGNEXT(valInMem, 7);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -126,7 +126,7 @@ int LB (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LH (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11));
   cur = SIGNEXT(valInMem, 15);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -134,7 +134,7 @@ int LH (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LW (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11));
   cur = valInMem;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -142,7 +142,7 @@ int LW (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LBU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11));
   cur = ZEROEXT(valInMem, 7);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -150,7 +150,7 @@ int LBU (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LHU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+  int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11));
   cur = ZEROEXT(valInMem, 15);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -165,7 +165,9 @@ int SLLI (int Rd, int Rs1, int Zimm, int Funct3) {
 
 int SLTI (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < Imm);
+  int Rs1Val = CURRENT_STATE.REGS[Rs1];
+  int ImmExt = SIGNEXT(Imm, 11);
+  cur = (Rs1Val < ImmExt);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -173,7 +175,7 @@ int SLTI (int Rd, int Rs1, int Imm, int Funct3) {
 int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
   int cur = 0;
   unsigned int cRs1u = CURRENT_STATE.REGS[Rs1]; // "Current Rs1 Unsigned"
-  unsigned int Immu = Imm; // "Imm Unsigned"
+  unsigned int Immu = SIGNEXT(Imm, 11); // "Imm Unsigned"
   cur = cRs1u < Immu;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
@@ -237,7 +239,19 @@ int LUI (int Rd, int Upimm) {
 
 
 // S Instructions
-// ...
+// int LB (int Rd, int Rs1, int Imm, int Funct3) {
+//   int cur = 0;
+//   int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
+//   cur = SIGNEXT(valInMem, 7);
+//   NEXT_STATE.REGS[Rd] = cur;
+//   return 0;
+// }
+int SB (int Rs1, int Rs2, int Imm) {
+  int addr = CURRENT_STATE.REGS[Rs1] + Imm;
+  int cur = CURRENT_STATE.REGS[Rs2];
+  mem_write_32(addr, cur);
+  return 0;
+}
 
 
 
@@ -246,7 +260,7 @@ int BEQ (int Rs1, int Rs2, int Imm, int Funct3) {
   int cur = 0;
   Imm = Imm << 1;
   if (CURRENT_STATE.REGS[Rs1] == CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,13));
+    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,11));
   return 0;
 }
 
@@ -254,23 +268,27 @@ int BNE (int Rs1, int Rs2, int Imm, int Funct3) {
   int cur = 0;
   Imm = Imm << 1;
   if (CURRENT_STATE.REGS[Rs1] != CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,13));
+    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,11));
   return 0;
 }
 
 int BLT (int Rs1, int Rs2, int Imm, int Funct3) {
   int cur = 0;
   Imm = Imm << 1;
-  if (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,13));
+  int Rs1Val = CURRENT_STATE.REGS[Rs1];
+  int Rs2Val = CURRENT_STATE.REGS[Rs2];
+  if (Rs1Val < Rs2Val)
+    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,11));
   return 0;
 }
 
 int BGE (int Rs1, int Rs2, int Imm, int Funct3) {
   int cur = 0;
   Imm = Imm << 1;
-  if (CURRENT_STATE.REGS[Rs1] >= CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,13));
+  int Rs1Val = CURRENT_STATE.REGS[Rs1];
+  int Rs2Val = CURRENT_STATE.REGS[Rs2];
+  if (Rs1Val >= Rs2Val)
+    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,11));
   return 0;
 }
 
@@ -280,7 +298,7 @@ int BLTU (int Rs1, int Rs2, int Imm, int Funct3) {
   unsigned int cRs1u = CURRENT_STATE.REGS[Rs1];
   unsigned int cRs2u = CURRENT_STATE.REGS[Rs2];
   if (cRs1u < cRs2u)
-    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,13));
+    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,11));
   return 0;
 }
 
@@ -290,14 +308,13 @@ int BGEU (int Rs1, int Rs2, int Imm, int Funct3) {
   unsigned int cRs1u = CURRENT_STATE.REGS[Rs1];
   unsigned int cRs2u = CURRENT_STATE.REGS[Rs2];
   if (cRs1u >= cRs2u)
-    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,13));
+    NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + (SIGNEXT(Imm,11));
   return 0;
 }
 
 
 
 // S Instruction
-int SB (char* i_);
 int SH (char* i_);
 int SW (char* i_);
 
@@ -307,6 +324,8 @@ int JALR (char* i_);
 // J instruction
 int JAL (char* i_);
 
-int ECALL (char* i_){return 0;}
+int ECALL (char* i_){
+  return 0;
+}
 
 #endif
