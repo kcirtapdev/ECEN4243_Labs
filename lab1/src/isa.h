@@ -219,6 +219,11 @@ int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
   return 0;
 }
 
+int JALR (int Rd, int Rs1, int Imm) {
+  NEXT_STATE.PC = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11) - 4;
+  NEXT_STATE.REGS[Rd] = CURRENT_STATE.PC + 4;
+  return 0;
+}
 
 
 // U Instructions
@@ -239,15 +244,22 @@ int LUI (int Rd, int Upimm) {
 
 
 // S Instructions
-// int LB (int Rd, int Rs1, int Imm, int Funct3) {
-//   int cur = 0;
-//   int valInMem = mem_read_32(CURRENT_STATE.REGS[Rs1] + Imm);
-//   cur = SIGNEXT(valInMem, 7);
-//   NEXT_STATE.REGS[Rd] = cur;
-//   return 0;
-// }
 int SB (int Rs1, int Rs2, int Imm) {
-  int addr = CURRENT_STATE.REGS[Rs1] + Imm;
+  int addr = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11);
+  int cur = CURRENT_STATE.REGS[Rs2];
+  mem_write_32(addr, cur);
+  return 0;
+}
+
+int SH (int Rs1, int Rs2, int Imm) {
+  int addr = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11);
+  int cur = CURRENT_STATE.REGS[Rs2];
+  mem_write_32(addr, cur);
+  return 0;
+}
+
+int SW (int Rs1, int Rs2, int Imm) {
+  int addr = CURRENT_STATE.REGS[Rs1] + SIGNEXT(Imm, 11);
   int cur = CURRENT_STATE.REGS[Rs2];
   mem_write_32(addr, cur);
   return 0;
@@ -312,18 +324,15 @@ int BGEU (int Rs1, int Rs2, int Imm, int Funct3) {
   return 0;
 }
 
+// J instructions
+int JAL (int Rd, int Imm) {
+  NEXT_STATE.PC = (CURRENT_STATE.PC - 4) + SIGNEXT(Imm, 20);
+  NEXT_STATE.REGS[Rd] = CURRENT_STATE.PC + 4;
+}
 
 
-// S Instruction
-int SH (char* i_);
-int SW (char* i_);
 
-// I instruction
-int JALR (char* i_);
-
-// J instruction
-int JAL (char* i_);
-
+// ECALL Instruction
 int ECALL (char* i_){
   return 0;
 }

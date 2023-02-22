@@ -250,6 +250,10 @@ int i_process(char* i_) {
         break;
     }
   }
+  else if(!strcmp(d_opcode,"1100111")) {
+    printf("--- This is a JALR instruction. \n");
+      JALR(Rd, Rs1, Imm);
+  }
 
   return 1;	
 }
@@ -353,7 +357,6 @@ int s_process(char* i_) {
   char rs2[6]; rs2[5] = '\0';
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
-  char imm[8];
   
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
@@ -365,10 +368,16 @@ int s_process(char* i_) {
     funct3[i] = i_[31-14+i];
   }
 
-  for(int i = 0; i < 7; i++) {
+
+  // Get immediate
+  char imm[13];
+  for(int i = 0; i < 7; i++) { // Get first 7 bits
     imm[i] = i_[i];
   }
-  imm[7] = '\0';
+  for(int i = 0; i < 5; i++) { // Get next 5 bits
+    imm[i+7] = i_[31-11+i];
+  }
+  imm[12] = '\0';
 
   int Rs1 = bchar_to_int(rs1);
   int Rs2 = bchar_to_int(rs2);		   
@@ -386,11 +395,11 @@ int s_process(char* i_) {
         break;
       case 0x1 :
         printf("--- This is an SH instruction. \n");
-        // SH(Rd, Rs1, Rs2, Imm);
+        SH(Rs1, Rs2, Imm);
         break;
       case 0x2 :
         printf("--- This is an SW instruction. \n");
-        // SW(Rd, Rs1, Rs2, Imm);
+        SW(Rs1, Rs2, Imm);
         break;
     }
   }
@@ -401,7 +410,44 @@ int j_process(char* i_) {
 
   /* This function execute Jump instructions */
 
-  /* Add jump instructions here */ 
+  // Get imm char[]
+  char imm[22];
+  imm[0] = i_[0];
+  imm[1] = i_[12];
+  imm[2] = i_[13];
+  imm[3] = i_[14];
+  imm[4] = i_[15];
+  imm[5] = i_[16];
+  imm[6] = i_[17];
+  imm[7] = i_[18];
+  imm[8] = i_[19];
+  imm[9] = i_[11];
+  imm[10] = i_[1];
+  imm[11] = i_[2];
+  imm[12] = i_[3];
+  imm[13] = i_[4];
+  imm[14] = i_[5];
+  imm[15] = i_[6];
+  imm[16] = i_[7];
+  imm[17] = i_[8];
+  imm[18] = i_[9];
+  imm[19] = i_[10];
+  imm[20] = '0';
+  imm[21] = '\0';
+
+  // Get rd[]
+  char rd[6];
+  for(int i = 0; i < 5; i++) {
+    rd[i] = i_[i+20];
+  }
+  rd[5] = '\0';
+
+  // Convert char[]s to ints
+  int Imm = bchar_to_int(imm);
+  int Rd = bchar_to_int(rd);
+
+  // Since JAL is the only J-type instruction, call it
+  JAL(Rd, Imm);
 
   return 1;
 
@@ -489,6 +535,12 @@ int decode_and_execute(char* i_) {
   else if((i_[25] == '0') && (i_[26] == '0') &&
      (i_[27] == '0') && (i_[28] == '0') &&
      (i_[29] == '0') && (i_[30] == '1') && (i_[31] == '1')) {
+    printf("- This is an Immediate Type Instruction. \n");
+    i_process(i_);
+  }
+  else if((i_[25] == '1') && (i_[26] == '1') &&
+     (i_[27] == '0') && (i_[28] == '0') &&
+     (i_[29] == '1') && (i_[30] == '1') && (i_[31] == '1')) {
     printf("- This is an Immediate Type Instruction. \n");
     i_process(i_);
   }
